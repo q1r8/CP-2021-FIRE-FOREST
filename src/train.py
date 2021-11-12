@@ -1,6 +1,6 @@
 import yaml
-from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from tensorflow.keras.models import Sequential
@@ -14,13 +14,13 @@ def make_dataset(config):
     )
 
     train_data_loader = data_generator.flow_from_directory(
-        directory=config.get(),
+        directory=config.get('dataset_path'),
         target_size=(config.get('img_width'), config.get('img_height')),
         subset='training'
     )
 
     val_data_loader = data_generator.flow_from_directory(
-        directory=config.get(),
+        directory=config.get('dataset_path'),
         target_size=(config.get('img_width'), config.get('img_height')),
         subset='validation'
     )
@@ -42,7 +42,7 @@ def make_model_backbone():
 
 def train_model(model, train_generator, val_generator):
     model.compile(loss='categorical_crossentropy',
-                       optimizer=Adam(lr=config.get('learning_rate')),
+                       optimizer=Adam(lr=config.get('learning_rate'), decay=1e-6),
                        metrics=['accuracy'])
 
     rlr = ReduceLROnPlateau(monitor='val_accuracy', patience=2, verbose=2, factor=0.7)
@@ -60,4 +60,4 @@ if __name__=='__main__':
     config = yaml.load(open(f"./train_config.yaml", "r"))
     train_data_generator, val_data_generator = make_dataset(config)
     model = make_model_backbone()
-    train_model()
+    train_model(model, train_data_generator, val_data_generator)

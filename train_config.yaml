@@ -1,6 +1,7 @@
 dataset_path : '../fire_dataset/'
 models_dir : '/models'
 
+learning_rate: 0.001
 steps_per_epoch : 1000
 batch_size : 256
 seed : 1
