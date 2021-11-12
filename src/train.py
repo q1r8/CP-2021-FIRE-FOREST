@@ -57,7 +57,7 @@ def train_model(model, train_generator, val_generator):
 
 
 if __name__=='__main__':
-    config = yaml.load(open(f"./train_config.yaml", "r"))
+    config = yaml.load(open(f"./train_classification_config.yaml", "r"))
     train_data_generator, val_data_generator = make_dataset(config)
     model = make_model_backbone()
     train_model(model, train_data_generator, val_data_generator)
