@@ -1,11 +1,11 @@
 import yaml
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from keras.optimizers import Adam
+from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
+from keras.preprocessing.image import ImageDataGenerator
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras import layers
-from tensorflow.keras.applications import MobileNetV2
+from keras.models import Sequential
+from keras import layers
+from keras.applications import MobileNetV2
 
 
 def make_dataset(config):
