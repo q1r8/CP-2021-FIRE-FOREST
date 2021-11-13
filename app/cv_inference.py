@@ -17,8 +17,8 @@ model = load_model('your model path')
 
 submission = pd.DataFrame()
 for i in test_images:
-    image = Image.open(f'{test_photos_path}/{i}')
-    image = image.resize((224, 224))
+    image = cv.imread(f'{test_photos_path}/{i}')
+    image = Image.fromarray(image.astype('uint8'), 'RGB').resize((320, 320))
     
     image = np.asarray(image)
     image = np.expand_dims(image, axis=0)
