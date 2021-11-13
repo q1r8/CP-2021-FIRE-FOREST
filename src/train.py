@@ -4,9 +4,7 @@ from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 
 from keras.models import Sequential
-from keras import layers
-from keras.applications import MobileNetV2
-
+from keras.layers import Conv2D, MaxPooling2D, Dropout, Dense, BatchNormalization, GlobalAveragePooling2D
 
 def make_dataset(config):
     data_generator = ImageDataGenerator(
@@ -29,16 +27,25 @@ def make_dataset(config):
     return train_data_loader, val_data_loader
 
 
-def make_model_backbone():
-    base_resnet = MobileNetV2(
-        weights='imagenet',
-        include_top=False,
-        pooling='avg',
-        input_shape=(config.get('img_width'), config.get('img_height'), 3))
-
+def make_model():
     model = Sequential()
-    model.add(base_resnet)
-    model.add(layers.Dense(2, activation='softmax'))
+
+    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(config.get('img_width'), config.get('img_height'), 3)))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+
+    model.add(GlobalAveragePooling2D())
+    model.add(Dense(512, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.5))
+    model.add(Dense(2, activation='softmax'))
+
     return model
 
 
@@ -60,5 +67,5 @@ def train_model(model, train_generator, val_generator):
 if __name__=='__main__':
     config = yaml.load(open(f"./train_classification_config.yaml", "r"))
     train_data_generator, val_data_generator = make_dataset(config)
-    model = make_model_backbone()
+    model = make_model()
     train_model(model, train_data_generator, val_data_generator)
