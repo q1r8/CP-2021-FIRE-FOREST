@@ -1,16 +1,18 @@
 import yaml
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from keras.optimizers import Adam
+from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
+from keras.preprocessing.image import ImageDataGenerator
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras import layers
-from tensorflow.keras.applications import MobileNetV2
+from keras.models import Sequential
+from keras import layers
+from keras.applications import MobileNetV2
 
 
 def make_dataset(config):
     data_generator = ImageDataGenerator(
         validation_split=config.get('validation_split'),
+        horizontal_flip=True,
+        rotation_range=15
     )
 
     train_data_loader = data_generator.flow_from_directory(
@@ -46,12 +48,11 @@ def train_model(model, train_generator, val_generator):
                        metrics=['accuracy'])
 
     rlr = ReduceLROnPlateau(monitor='val_accuracy', patience=2, verbose=2, factor=0.7)
-    checkpoint = ModelCheckpoint(filepath=config.get('save_model_path') + '-{epoch:02d}-{val_accuracy:.2f}.h5',
+    checkpoint = ModelCheckpoint(filepath='-{epoch:02d}-{val_accuracy:.2f}.h5',
                                  monitor='val_accuracy', verbose=2, save_best_only=True)
 
     model.fit(train_generator,
                     validation_data=val_generator,
-                    steps_per_epoch=config.get('steps_per_epoch'),
                     epochs=config.get('epochs'),
                     callbacks=[rlr, checkpoint])
 
