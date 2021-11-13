@@ -9,25 +9,19 @@ import cv2 as cv
 
 config = yaml.load(open(f"./train_classification_config.yaml", "r"))
 
-test_images = os.listdir('./app/test_set/')
+test_photos_path = ''
+test_images = os.listdir(test_photos_path)
+
 predict = []
-model = load_model('-02-0.87.h5')
+model = load_model('your model path')
 
-print(test_images)
-
+submission = pd.DataFrame()
 for i in test_images:
-    image = Image.open(f'./app/test_set/{i}')
+    image = Image.open(f'{test_photos_path}/{i}')
     image = image.resize((224, 224))
     
     image = np.asarray(image)
     image = np.expand_dims(image, axis=0)
-    
-    predict.append(np.argmax(model.predict(image)))
-print(predict)
-# img = preprocess_input('app/test_set/img231.png')
 
+    submission = submission.append({'image':i, 'label':np.argmax(model.predict(image))})
 
-# preds = model.predict(img)
-
-
-# print(preds)
