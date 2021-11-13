@@ -30,18 +30,29 @@ https://colab.research.google.com/drive/1Xls56isBRmYn3FrqYvypqzbg1U6gJbTc?usp=sh
   5. pip install -r requirements.txt
 
 # Запуск обучения
-Проект запускается из корневой папки. Данные разбитые по классам = директориям лежат в одной директории для датасета
-dataset/
-  -class_1/
-    -image1
-    -image2
-  -class_2/
-    -image1
-    -image2
+Проект запускается из корневой папки. Данные разбитые по классам = директориям лежат в одной директории
+
+```
+train_dataset/
+    - class_1/
+        train_image_name_1.jpg
+        train_image_name_2.jpg
+        ...
+        train_image_name_N.jpg
+    - class_2/
+        train_image_name_1.jpg
+        train_image_name_2.jpg
+        ...
+        train_image_name_N.jpg
+```
     
   1. Поставить нужный путь датасета в конфиге
   2. python src/train.py
 
+# Запуск сервиса
+  1. Указать путь до обученной модели и видео для анализа
+  2. python app/api_cv.py
+
 # Разработчики
 Егор Морозов - tg @egor_moroz
-Сергей Башков - tg @https://t.me/bashkovs
+Сергей Башков - tg @bashkovs
