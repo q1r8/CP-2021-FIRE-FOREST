@@ -5,6 +5,7 @@ from keras.preprocessing.image import ImageDataGenerator
 
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Dense, BatchNormalization, GlobalAveragePooling2D
+from keras.models import load_model
 
 def make_dataset(config):
     data_generator = ImageDataGenerator(
@@ -68,4 +69,5 @@ if __name__=='__main__':
     config = yaml.load(open(f"./train_classification_config.yaml", "r"))
     train_data_generator, val_data_generator = make_dataset(config)
     model = make_model()
+    # model = load_model()
     train_model(model, train_data_generator, val_data_generator)

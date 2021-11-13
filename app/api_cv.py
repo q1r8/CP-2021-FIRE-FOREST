@@ -5,13 +5,10 @@ from datetime import datetime
 from keras.models import load_model
 
 def preprocess_input_data(img):
-    image = Image.open(img)
-    image = image.resize((224, 224))
-
-    image = np.asarray(image)
-    image = np.expand_dims(image, axis=0)
-
-    return image
+    img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    img_gray = (255 - img_gray)
+    img_gray = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2RGB)
+    return img_gray
 
 
 def get_model(path):
@@ -52,6 +49,7 @@ def video_analyze(video_path, model_path):
         image = Image.fromarray(img_frame.astype('uint8'), 'RGB').resize((320, 320))
 
         image = np.asarray(image)
+        image = preprocess_input_data(image)
         image = np.expand_dims(image, axis=0)
 
         model_predicts = np.argmax(model.predict(image))
